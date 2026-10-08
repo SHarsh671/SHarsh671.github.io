@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
-import { motion, useScroll, useSpring, useTransform, useInView, animate } from 'framer-motion'
+import { useState, useEffect } from 'react'
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { ArrowUpRight, Mail, Download, ExternalLink, Menu, X, Code2, Database, Server, Terminal, MapPin, ShieldCheck, Layers } from 'lucide-react'
 import './styles.css'
 
@@ -95,18 +95,6 @@ const reveal = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, tra
 
 const sections = ['home', 'about', 'projects', 'skills', 'experience', 'contact']
 
-function CountUp({ to, suffix = '' }) {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true })
-  const [val, setVal] = useState(0)
-  useEffect(() => {
-    if (!inView) return
-    const c = animate(0, to, { duration: 1.4, ease: 'easeOut', onUpdate: v => setVal(Math.round(v)) })
-    return () => c.stop()
-  }, [inView, to])
-  return <span ref={ref}>{val}{suffix}</span>
-}
-
 const spotlight = (e) => {
   const r = e.currentTarget.getBoundingClientRect()
   e.currentTarget.style.setProperty('--mx', `${e.clientX - r.left}px`)
@@ -118,7 +106,7 @@ function App() {
   const [active, setActive] = useState('home')
   const { scrollY, scrollYProgress } = useScroll()
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30 })
-  const photoY = useTransform(scrollY, [0, 600], [0, 80])
+  const photoY = useSpring(useTransform(scrollY, [0, 600], [0, 80]), { stiffness: 70, damping: 24, mass: 0.5 })
 
   useEffect(() => {
     const obs = new IntersectionObserver(
@@ -184,7 +172,7 @@ function App() {
 
         <section id="about" className="section">
           <div className="container narrow">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: .2 }} variants={reveal}>
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: false, amount: .2 }} variants={reveal}>
               <p className="section-kicker">01 / About</p>
               <h2 className="section-title">Building things I can <span>explain.</span></h2>
               <div className="about-grid">
@@ -198,25 +186,19 @@ function App() {
                   <pre>{`$ whoami\nharshmeet-singh\n\n$ focus\nbackend + full-stack\n\n$ education\nMcMaster University · CS · 2026\n\n$ currently-learning\nJava → Spring Boot → AWS`}</pre>
                 </div>
               </div>
-              <div className="stats">
-                <div><strong><CountUp to={3} /></strong><span>Backend and AI projects</span></div>
-                <div><strong><CountUp to={32} /></strong><span>REST endpoints built</span></div>
-                <div><strong><CountUp to={70} suffix="+" /></strong><span>JUnit tests written</span></div>
-                <div><strong><CountUp to={2} suffix="+" /></strong><span>Years reliable on the job</span></div>
-              </div>
             </motion.div>
           </div>
         </section>
 
         <section id="projects" className="section projects-section">
           <div className="container">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: .2 }} variants={reveal}>
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: false, amount: .2 }} variants={reveal}>
               <p className="section-kicker">02 / Projects</p>
               <div className="section-heading-row"><h2 className="section-title">Things I’m <span>building.</span></h2><p>Backend-focused projects built with Java, Spring Boot, and PostgreSQL, plus an AI project in Python.</p></div>
             </motion.div>
             <div className="project-list">
               {projects.map((project, index) => (
-                <motion.article key={project.name} initial="hidden" whileInView="visible" viewport={{ once: true, amount: .12 }} variants={reveal} transition={{ delay: index * .08 }} className="project-card" onMouseMove={spotlight}>
+                <motion.article key={project.name} initial="hidden" whileInView="visible" viewport={{ once: false, amount: .12 }} variants={reveal} transition={{ delay: index * .08 }} className="project-card" onMouseMove={spotlight}>
                   <div className="project-image"><img src={project.image} alt={`${project.name} preview`} /><div className="project-number">{project.accent}</div></div>
                   <div className="project-content">
                     <div><span className="project-label">{project.label}</span><h3>{project.name}</h3><p>{project.description}</p><ul className="highlights">{project.highlights.map(h => <li key={h}>{h}</li>)}</ul></div>
@@ -234,17 +216,17 @@ function App() {
 
         <section id="skills" className="section">
           <div className="container">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: .2 }} variants={reveal}>
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: false, amount: .2 }} variants={reveal}>
               <p className="section-kicker">03 / Skills</p>
               <h2 className="section-title">My current <span>toolbox.</span></h2>
             </motion.div>
-            <div className="skills-grid">{skills.map(({ title, icon: Icon, items }, i) => <motion.div key={title} className="skill-card" onMouseMove={spotlight} initial="hidden" whileInView="visible" viewport={{ once: true, amount: .2 }} variants={reveal} transition={{ delay: i * .08 }}><Icon size={21} /><h3>{title}</h3><div className="skill-tags">{items.map(item => <span key={item}>{item}</span>)}</div></motion.div>)}</div>
+            <div className="skills-grid">{skills.map(({ title, icon: Icon, items }, i) => <motion.div key={title} className="skill-card" onMouseMove={spotlight} initial="hidden" whileInView="visible" viewport={{ once: false, amount: .2 }} variants={reveal} transition={{ delay: i * .08 }}><Icon size={21} /><h3>{title}</h3><div className="skill-tags">{items.map(item => <span key={item}>{item}</span>)}</div></motion.div>)}</div>
           </div>
         </section>
 
         <section id="experience" className="section">
           <div className="container narrow">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: .2 }} variants={reveal}>
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: false, amount: .2 }} variants={reveal}>
               <p className="section-kicker">04 / Experience</p>
               <h2 className="section-title">Reliable <span>by default.</span></h2>
               {experience.map(job => (
@@ -262,7 +244,7 @@ function App() {
 
         <section id="contact" className="section contact-section">
           <div className="container narrow">
-            <motion.div className="contact-card" initial="hidden" whileInView="visible" viewport={{ once: true, amount: .2 }} variants={reveal}>
+            <motion.div className="contact-card" initial="hidden" whileInView="visible" viewport={{ once: false, amount: .2 }} variants={reveal}>
               <p className="section-kicker">05 / Contact</p>
               <h2>Let’s build something <span>useful.</span></h2>
               <p>I’m currently looking for entry-level software engineering opportunities. If you’re hiring, building something interesting, or just want to connect, feel free to reach out.</p>
