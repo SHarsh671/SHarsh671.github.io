@@ -1,6 +1,6 @@
 # Harshmeet Singh Portfolio
 
-Modern personal portfolio for Harshmeet Singh, built with React, Vite, Framer Motion, and Lucide React.
+Modern personal portfolio for Harshmeet Singh, built with React, Vite, Framer Motion and Lucide React.
 
 ## Run locally
 
@@ -15,4 +15,4 @@ npm run dev
 npm run build
 ```
 
-Replace `assets/images/profile1.png` with the professional headshot used on LinkedIn when ready.
+
